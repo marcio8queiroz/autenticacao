@@ -34,7 +34,7 @@ async function findCustomers() {
 
 async function findCustomer(id) {
     connect();
-    const objectId = new ObjectId(id);
+    const objectId = new ObjectId(id); //caiu em desuso
     return global.connection
         .collection("clientes")
         .findOne({ _id: objectId });
@@ -49,14 +49,14 @@ async function insertCustomer(customer) {
 
 async function updateCustomer(id, customer) {
     connect();
-    const objectId = new ObjectId(id);
+    const objectId = ObjectId.createFromHexString(id);
     return global.connection
         .collection("clientes")
         .updateOne({ _id: objectId }, { $set: customer });
 }
 async function deleteCustomer(id) {
     connect();
-    const objectId = new ObjectId(id);
+    const objectId = ObjectId.createFromHexString(id); // esse é o novo
     return global.connection
         .collection("clientes")
         .deleteOne({ _id: objectId });

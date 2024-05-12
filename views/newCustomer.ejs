@@ -1,0 +1,90 @@
+<%- include("top.ejs") %>
+
+    <p>Preencha os campos abaixo para cadastrar um cliente.</p>
+    <form action="/customers/new" method="POST">
+        <fieldset>
+            <legend>Dados Cadastrais</legend>
+            <p>
+                Nome: <input type="text" name="nome" value="<%= customer.nome%>" />
+            </p>
+            <p>
+                Idade: <input type="number" name="idade" value="<%= customer.idade%>" />
+            </p>
+            <p>
+                <!-- Região: <input type="text" name="cidade" value="<%= customer.cidade%>" /> -->
+                <!-- Adicione o evento onchange para a seleção de UF -->
+                <select id="uf" name="uf" onchange="buscarCidades()">
+                    <option>Selecione a UF:</option>
+                </select>
+
+                <!-- Adicione um elemento select para as cidades -->
+                Cidade: <select id="cidade" name="cidade"></select>
+            </p>
+            <input type="hidden" name="id" value="<%= customer._id%>" />
+            <p>
+                <input type="submit" value="Salvar" />
+                <a href="/customers">Cancelar</a>
+            </p>
+        </fieldset>
+    </form>
+    <script>
+        fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados")
+            .then(response => response.json())
+            .then(json => {
+                const ufsHtml = document.getElementById("uf");
+                //const siglas = json.map(item => item.sigla).sort();
+                // siglas.forEach(item => {
+                json.forEach(item => {
+                    const opt = document.createElement("option");
+                    opt.innerText = item.sigla;
+                    ufsHtml.add(opt);
+                })
+            });
+
+        //         <%
+        //     if (customer.uf) {
+        //         %>
+        //             //document.getElementById("uf").value = "<%= customer.uf%>";
+        //             ufsHtml.value = "<%= customer.uf%>";
+        //         <%
+        //     }
+        // %>
+
+        // .catch(error => alert(error));
+
+
+        function buscarCidades() {
+            const ufSelecionada = document.getElementById("uf").value;
+
+            // Verifica se uma UF foi selecionada
+            if (ufSelecionada !== "Selecione a UF:") {
+                // Use a UF selecionada para buscar as cidades correspondentes
+                fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${ufSelecionada}/municipios`)
+                    .then(response => response.json())
+                    .then(json => {
+                        const cidadeSelect = document.getElementById("cidade");
+
+                        // Limpe as opções atuais
+                        cidadeSelect.innerHTML = "";
+
+                        // Adicione as novas opções de cidades
+                        json.forEach(item => {
+                            const opt = document.createElement("option");
+                            opt.innerText = item.nome;
+                            cidadeSelect.add(opt);
+                        });
+
+                        // Se você quiser definir a cidade predefinida, faça isso aqui
+                        if ("<%= customer.cidade%>") {
+                            cidadeSelect.value = "<%= customer.cidade%>";
+                        }
+                    })
+                    .catch(error => alert(error));
+            }
+        }
+        if (window.location.search) {
+            const error = window.location.search.split('=')[1];
+            alert(decodeURI(error));
+        }
+    </script>
+    <%- include("bottom.ejs") %>
