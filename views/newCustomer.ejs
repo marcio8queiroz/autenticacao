@@ -1,90 +1,97 @@
 <%- include("top.ejs") %>
 
-    <p>Preencha os campos abaixo para cadastrar um cliente.</p>
-    <form action="/customers/new" method="POST">
-        <fieldset>
-            <legend>Dados Cadastrais</legend>
-            <p>
-                Nome: <input type="text" name="nome" value="<%= customer.nome%>" />
-            </p>
-            <p>
-                Idade: <input type="number" name="idade" value="<%= customer.idade%>" />
-            </p>
-            <p>
-                <!-- Região: <input type="text" name="cidade" value="<%= customer.cidade%>" /> -->
-                <!-- Adicione o evento onchange para a seleção de UF -->
-                <select id="uf" name="uf" onchange="buscarCidades()">
+    <p>Preencha os campos abaixo para cadastrar ou editar um cliente.</p>
+    <div class="col-6">
+        <form action="/customers/new" method="POST">
+            <div class="mob-3">
+                <div class="fomr-group">
+                    <label for="name">Nome:</label>
+
+                    <input type="text" name="name" value="<%= customer.name%>" class="form-control" placeholder="Nome do cliente" />
+                </div>
+            </div>
+            <div class="mob-3">
+                <div class="form-group">
+                    <label for="name">CPF:</label>
+                    <input type="text" name="cpf" value="<%= customer.cpf%>" class="form-control" placeholder="CPF do cliente" />
+                </div>
+            </div>
+            <div class="mob-3">
+                <div class="form-group">
+                    Região: <select id="cidade" name="cidade" value="<%= customer.cidade%>" class="form-control"></select>
+                    <p>
+                        <div class="input-group">
+                            <select id="uf" name="uf" class="form-control" onchange="buscarCidades()">
                     <option>Selecione a UF:</option>
                 </select>
+                        </div>
+                </div>
+            </div>
 
-                <!-- Adicione um elemento select para as cidades -->
-                Cidade: <select id="cidade" name="cidade"></select>
+
+            <!-- <input type="text" name="cidade" value="<%= //customer.cidade%>" /> -->
+            <!-- Adicione o evento onchange para a seleção de UF -->
+
+
+            <!-- Adicione um elemento select para as cidades -->
+
             </p>
             <input type="hidden" name="id" value="<%= customer._id%>" />
             <p>
-                <input type="submit" value="Salvar" />
-                <a href="/customers">Cancelar</a>
+                <input type="submit" value="Salvar" class="btn btn-primary" />
+                <a href="/customers" class="btn btn-secondary">Cancelar</a>
             </p>
-        </fieldset>
-    </form>
-    <script>
-        fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados")
-            .then(response => response.json())
-            .then(json => {
-                const ufsHtml = document.getElementById("uf");
-                //const siglas = json.map(item => item.sigla).sort();
-                // siglas.forEach(item => {
-                json.forEach(item => {
-                    const opt = document.createElement("option");
-                    opt.innerText = item.sigla;
-                    ufsHtml.add(opt);
-                })
-            });
 
-        //         <%
-        //     if (customer.uf) {
-        //         %>
-        //             //document.getElementById("uf").value = "<%= customer.uf%>";
-        //             ufsHtml.value = "<%= customer.uf%>";
-        //         <%
-        //     }
-        // %>
-
-        // .catch(error => alert(error));
-
-
-        function buscarCidades() {
-            const ufSelecionada = document.getElementById("uf").value;
-
-            // Verifica se uma UF foi selecionada
-            if (ufSelecionada !== "Selecione a UF:") {
-                // Use a UF selecionada para buscar as cidades correspondentes
-                fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${ufSelecionada}/municipios`)
-                    .then(response => response.json())
-                    .then(json => {
-                        const cidadeSelect = document.getElementById("cidade");
-
-                        // Limpe as opções atuais
-                        cidadeSelect.innerHTML = "";
-
-                        // Adicione as novas opções de cidades
-                        json.forEach(item => {
-                            const opt = document.createElement("option");
-                            opt.innerText = item.nome;
-                            cidadeSelect.add(opt);
-                        });
-
-                        // Se você quiser definir a cidade predefinida, faça isso aqui
-                        if ("<%= customer.cidade%>") {
-                            cidadeSelect.value = "<%= customer.cidade%>";
-                        }
+        </form>
+        <script>
+            fetch("https://servicodados.ibge.gov.br/api/v1/localidades/estados")
+                .then(response => response.json())
+                .then(json => {
+                    const ufsHtml = document.getElementById("uf");
+                    //const siglas = json.map(item => item.sigla).sort();
+                    // siglas.forEach(item => {
+                    json.forEach(item => {
+                        const opt = document.createElement("option");
+                        opt.innerText = item.sigla;
+                        ufsHtml.add(opt);
                     })
-                    .catch(error => alert(error));
+                });
+
+
+
+            function buscarCidades() {
+                const ufSelecionada = document.getElementById("uf").value;
+
+                // Verifica se uma UF foi selecionada
+                if (ufSelecionada !== "Selecione a UF:") {
+                    // Use a UF selecionada para buscar as cidades correspondentes
+
+                    fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${ufSelecionada}/municipios`)
+                        .then(response => response.json())
+                        .then(json => {
+                            const cidadeSelect = document.getElementById("cidade");
+
+                            // Limpe as opções atuais
+                            cidadeSelect.innerHTML = "";
+
+                            // Adicione as novas opções de cidades
+                            json.forEach(item => {
+                                const opt = document.createElement("option");
+                                opt.innerText = item.nome;
+                                cidadeSelect.add(opt);
+                            });
+
+                            // Se você quiser definir a cidade predefinida, faça isso aqui
+                            if ("<%= customer.cidade%>") {
+                                cidadeSelect.value = "<%= customer.cidade%>";
+                            }
+                        })
+                        .catch(error => alert(error));
+                }
             }
-        }
-        if (window.location.search) {
-            const error = window.location.search.split('=')[1];
-            alert(decodeURI(error));
-        }
-    </script>
-    <%- include("bottom.ejs") %>
+            if (window.location.search) {
+                const error = window.location.search.split('=')[1];
+                alert(decodeURI(error));
+            }
+        </script>
+        <%- include("bottom.ejs") %>

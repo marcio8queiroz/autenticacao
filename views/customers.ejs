@@ -1,16 +1,16 @@
 <%- include("top.ejs") %>
-    <p>Welcome to
-        <%= title %>
-    </p>
-    <p>
-        <%= customers.length %> clientes cadastrados!
-    </p>
-    <table>
-        <thead>
+    <div class="alert alert-info">
+        <%= qty %> clientes cadastrados!
+    </div>
+
+    <!-- Depuração: verifique os dados que estão sendo passados -->
+    <pre><%= //JSON.stringify(customers, null, 2) %></pre>
+
+    <table class="table table-bordered table-striped table-hover">
+        <thead class="thead-dark">
             <tr>
                 <td>Nome</td>
-                <td>Idade</td>
-                <td>Região</td>
+                <td>CPF</td>
                 <td>Ações</td>
             </tr>
         </thead>
@@ -20,22 +20,16 @@
                 <tr>
                     <td>
                         <a href="/customers/edit/<%=item._id %>" title="Editar">
-                            <%= item.nome %>
+                            <%= item.name %>
                         </a>
                     </td>
                     <td>
-                        <%= item.idade %>
-                    </td>
-                    <td>
-                        <%= item.cidade %>
-                            <%= item.uf %>
+                        <%= item.cpf %>
                     </td>
 
                     <td>
-                        <a href="/customers/edit/<%=item._id %>" title="Editar">
-                            <img src="/images/edit.png">
-                        </a>
-                        <a href="/customers/delete/<%=item._id %>" title="Excluir" onclick="return confirm('Tem certeza que deseja excluir esse cliente?')">
+
+                        <a href="/customers/delete/<%=item._id %>" title="Excluir" class="btn btn-danger" onclick="return confirm('Tem certeza que deseja excluir esse cliente?')">
                             <img src="/images/delete.png">
                         </a>
                     </td>
@@ -45,7 +39,17 @@
         %>
         </tbody>
     </table>
-    <hr />
-    <a href="/customers/new">Cadastrar Novo</a>
-
+    <div class="row">
+        <div class="col-2">
+            <a href="/customers/new" class="btn btn-primary">Cadastrar Novo</a>
+        </div>
+        <div class="col-2">
+            <a href="/" class="btn btn-primary">index</a>
+        </div>
+        <div class="col-2">
+            <form action="/logout" method="POST">
+                <input type="submit" value="Logout" class="btn btn-secondary" />
+            </form>
+        </div>
+    </div>
     <%- include("bottom.ejs") %>

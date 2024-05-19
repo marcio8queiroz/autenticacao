@@ -7,7 +7,7 @@ router.get('/', async function(req, res, next) {
     try {
         const customers = await db.findCustomers();
         //console.log(customers);
-        res.render('customers', { title: 'Clientes', customers });
+        res.render('customers', { title: 'Clientes', customers, qty: customers.length });
     } catch (error) {
         console.error(error);
         res.render("error", { message: "Não foi possível listar os clientes", error })
@@ -40,21 +40,21 @@ router.get('/delete/:customerId', (request, response) => {
 })
 
 router.post('/new', (request, response) => {
-    if (!request.body.nome) {
+    if (!request.body.name) {
         return response.redirect("/customers/new?error=O campo nome é obrigatório");
     }
 
-    if (request.body.idade !== undefined && (isNaN(request.body.idade) || request.body.idade.trim() === "")) {
-        return response.redirect("/customers/new?error=O campo idade deve ser numérico");
+    if (request.body.cpf !== undefined && (isNaN(request.body.cpf) || request.body.cpf.trim() === "")) {
+        return response.redirect("/customers/new?error=O campo cpf deve ser numérico");
     }
 
     const id = request.body.id;
-    const nome = request.body.nome;
-    const idade = request.body.idade !== undefined ? parseInt(request.body.idade) : null;
+    const name = request.body.name;
+    const cpf = request.body.cpf !== undefined ? parseInt(request.body.cpf) : null;
     const cidade = request.body.cidade;
     const uf = request.body.uf && request.body.uf.length > 2 ? '' : request.body.uf;
 
-    const customer = { nome, idade, cidade, uf };
+    const customer = { name, cpf, cidade, uf };
     const promise = id ? db.updateCustomer(id, customer) :
         db.insertCustomer(customer);
 

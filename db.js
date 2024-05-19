@@ -7,7 +7,7 @@ async function connect() {
     if (!global.connection)
         try {
             await client.connect();
-            global.connection = client.db("aula");
+            global.connection = client.db(process.env.MONGODB_DATABASE);
             console.log("Connected to MongoDB!");
         } catch (error) {
             console.error("Error connecting to the database:", error);
@@ -20,7 +20,7 @@ async function findCustomers() {
     try {
         await connect(); // Garante que a conexão esteja estabelecida antes de buscar clientes
         const docs = await global.connection
-            .collection("clientes")
+            .collection("customers")
             .find({})
             .toArray();
         // callback(null, docs);
@@ -36,14 +36,14 @@ async function findCustomer(id) {
     connect();
     const objectId = new ObjectId(id); //caiu em desuso
     return global.connection
-        .collection("clientes")
+        .collection("customers")
         .findOne({ _id: objectId });
 }
 
 async function insertCustomer(customer) {
     connect();
     return global.connection
-        .collection("clientes")
+        .collection("customers")
         .insertOne(customer);
 }
 
@@ -51,14 +51,14 @@ async function updateCustomer(id, customer) {
     connect();
     const objectId = ObjectId.createFromHexString(id);
     return global.connection
-        .collection("clientes")
+        .collection("customers")
         .updateOne({ _id: objectId }, { $set: customer });
 }
 async function deleteCustomer(id) {
     connect();
     const objectId = ObjectId.createFromHexString(id); // esse é o novo
     return global.connection
-        .collection("clientes")
+        .collection("customers")
         .deleteOne({ _id: objectId });
 }
 module.exports = { findCustomers, insertCustomer, updateCustomer, deleteCustomer, findCustomer };
