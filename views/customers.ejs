@@ -39,6 +39,17 @@
         %>
         </tbody>
     </table>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <% for(let i=1; i <= pagesQty; i++) { %>
+                <li class="page-item">
+                    <a class="page-link" href="/customers/<%= i %>">
+                        <%= i %>
+                    </a>
+                </li>
+                <% } %>
+        </ul>
+    </nav>
     <div class="row">
         <div class="col-2">
             <a href="/customers/new" class="btn btn-primary">Cadastrar Novo</a>
