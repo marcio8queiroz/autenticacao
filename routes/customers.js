@@ -83,7 +83,7 @@ router.get('/:page?', async(req, res, next) => {
         const qty = await db.countCustomers();
         const pagesQty = Math.ceil(qty / db.PAGE_SIZE);
         const customers = await db.findCustomers(page);
-        res.render('customers', { title: 'Clientes', customers, qty, pagesQty });
+        res.render('customers', { title: 'Clientes', customers, qty, pagesQty, page });
     } catch (error) {
         console.error(error);
         res.render("error", { message: "Não foi possível listar os clientes", error })

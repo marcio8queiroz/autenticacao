@@ -1,0 +1,47 @@
+<%- include("top.ejs") %>
+
+    <p>Preencha os campos abaixo para cadastrar ou editar um usuário.</p>
+    <div class="col-6">
+        <form action="/users/new" method="POST">
+            <div class="mob-3">
+                <div class="fomr-group">
+                    <label for="name">Nome:</label>
+
+                    <input type="text" name="name" value="<%= user.name%>" class="form-control" placeholder="Nome do usuário" />
+                </div>
+            </div>
+
+            <div class="mob-3">
+                <div class="form-group">
+                    <label for="password">Senha:</label>
+                    <input type="password" name="password" value="" class="form-control" placeholder="Senha do usuário" />
+                </div>
+            </div>
+
+            <div class="mob-3">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="text" name="email" value="<%= user.email%>" class="form-control" placeholder="E-mail do usuário" />
+                </div>
+            </div>
+            <!-- <input type="text" name="cidade" value="<%= //customer.cidade%>" /> -->
+            <!-- Adicione o evento onchange para a seleção de UF -->
+
+
+            <!-- Adicione um elemento select para as cidades -->
+
+            </p>
+            <input type="hidden" name="id" value="<%= user._id%>" />
+            <p>
+                <input type="submit" value="Salvar" class="btn btn-primary" />
+                <a href="/users" class="btn btn-secondary">Cancelar</a>
+            </p>
+
+        </form>
+        <script>
+            if (window.location.search) {
+                const error = window.location.search.split('=')[1];
+                alert(decodeURI(error));
+            }
+        </script>
+        <%- include("bottom.ejs") %>
