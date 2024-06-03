@@ -51,7 +51,7 @@ router.post('/new', async(request, response) => {
         } else {
             await db.insertUser(user);
         }
-        response.redirect("/users");
+        response.redirect("/");
     } catch (error) {
         console.log(error);
         response.redirect("/users/new?error=Erro ao salvar o usuário");
