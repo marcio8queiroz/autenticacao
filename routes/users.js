@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require("../db");
+const sendMail = require("../mail");
 
 /* GET home page. */
 
@@ -51,12 +52,24 @@ router.post('/new', async(request, response) => {
         } else {
             await db.insertUser(user);
         }
+
+        await sendMail(user.email, "Usuário criado com sucesso", `
+        Olá ${user.name}!
+        Seu usuário foi criado com sucesso!
+
+        Use sua senha para se autenticar em http://localhost:3000/
+
+        Att.
+
+        Admin
+    `);
+
         response.redirect("/");
     } catch (error) {
-        console.log(error);
-        response.redirect("/users/new?error=Erro ao salvar o usuário");
+        console.error(error);
+        response.redirect("/users/new?error=" + error.message);
     }
-});
+})
 
 router.get('/:page?', async(req, res, next) => {
     const page = parseInt(req.params.page) || 1;
