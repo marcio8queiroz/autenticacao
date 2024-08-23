@@ -20,6 +20,16 @@
 
             <div class="mob-3">
                 <div class="form-group">
+                    <label for="profile">Perfil:</label>
+                    <select name="profile" class="form-control" value="<%= user.profile %>">
+                    <option value="1">Usuário Comum</option>
+                    <option value="2">Usuário Administrador</option>
+                  </select>
+                </div>
+            </div>
+
+            <div class="mob-3">
+                <div class="form-group">
                     <label for="email">Email:</label>
                     <input type="text" name="email" value="<%= user.email%>" class="form-control" placeholder="E-mail do usuário" />
                 </div>

@@ -14,12 +14,13 @@
         </form>
         <hr />
         <% if(message) { %>
-            <div clas="alert alert-danger">
+            <div clas="alert alert-danger"></div>
+            <div class="<%= messageClass %>">
                 <%= message %>
             </div>
             <% } %>
                 <p>
-                    <a href="/forgot">Esqueceu sua senha?</a> | <a href="/users/new">Não possui cadastro?</a>
+                    <a href="/forgot">Esqueceu sua senha?</a>
                 </p>
     </div>
 

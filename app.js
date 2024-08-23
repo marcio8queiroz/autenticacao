@@ -4,7 +4,8 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const passport = require("passport");
-const authMiddleware = require("./authMiddleware");
+const authenticationMiddleware = require("./authenticationMiddleware");
+const authorizationMiddleware = require("./authorizationMiddleware");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 
@@ -13,7 +14,7 @@ var loginRouter = require('./routes/login');
 var usersRouter = require('./routes/users');
 var customersRouter = require('./routes/customers');
 
-var app = express();
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -25,7 +26,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-authMiddleware(passport);
+authenticationMiddleware(passport);
 
 app.use(session({
     store: MongoStore.create({
@@ -37,16 +38,17 @@ app.use(session({
     secret: process.env.MONGO_STORE_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 30 * 60 * 1000 }
+    cookie: { maxAge: 30 * 60 * 1000 },
+    rolling: true
 }))
 
 app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/', loginRouter);
-app.use('/index', indexRouter);
-app.use('/users', usersRouter);
-app.use('/customers', customersRouter);
+app.use('/index', authorizationMiddleware, indexRouter);
+app.use('/users', authorizationMiddleware, usersRouter);
+app.use('/customers', authorizationMiddleware, customersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

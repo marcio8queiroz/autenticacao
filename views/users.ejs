@@ -10,6 +10,7 @@
         <thead class="thead-dark">
             <tr>
                 <td>Nome</td>
+                <td>Perfil</td>
                 <td>Email</td>
                 <td>Ações</td>
             </tr>
@@ -22,6 +23,9 @@
                         <a href="/users/edit/<%=item._id %>" title="Editar">
                             <%= item.name %>
                         </a>
+                    </td>
+                    <td>
+                        <%= parseInt(item.profile) === 1 ? "USER" : "ADMIN" %>
                     </td>
                     <td>
                         <%= item.email %>
