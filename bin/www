@@ -5,7 +5,7 @@
  */
 //require("dotenv-safe").config({});
 const app = require('../app');
-const debug = require('debug')('aula2:server');
+const debug = require('debug')('modulo02:server');
 const http = require('http');
 require('../db');
 
